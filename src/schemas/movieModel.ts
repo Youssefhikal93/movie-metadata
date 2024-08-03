@@ -1,4 +1,4 @@
-import {BaseEntity, Entity , Column,  PrimaryGeneratedColumn, UpdateDateColumn, OneToMany} from "typeorm"
+import {BaseEntity, Entity , Column,  PrimaryGeneratedColumn} from "typeorm"
 import { Genre } from "~/interfaces/movieBody";
 
 @Entity ('movie')

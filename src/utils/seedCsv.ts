@@ -1,11 +1,12 @@
-// src/utils/seed.ts
 import { createConnection } from 'typeorm';
 import { Movie } from '../schemas/movieModel';
 import csv from 'csv-parser';
 import fs from 'fs';
+import pgConfig from '~/ormconfig';
 
 const seedDatabase = async () => {
-  const connection:any = await createConnection();
+
+  const connection:any = await createConnection(pgConfig);
   const movieRepository = connection.getRepository(Movie);
 
   fs.createReadStream('movies.csv')
@@ -28,4 +29,4 @@ const seedDatabase = async () => {
     });
 };
 
-seedDatabase().catch(error => console.log(error));
+seedDatabase()

@@ -31,7 +31,7 @@ class Server {
     this.app.all('*', (req, res, next) => {
       return next(new NotfoundException(`URL is not found ${req.originalUrl}`))
     })
-    //global
+    //global error
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
       if (err instanceof CustomError) {
         res.status(err.statusCode).json(err.getError())

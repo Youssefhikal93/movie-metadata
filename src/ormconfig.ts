@@ -1,5 +1,7 @@
 import { ConnectionOptions  } from "typeorm";
 import { Movie } from "./schemas/movieModel";
+import 'dotenv/config';
+
 
 
 export const pgConfig :ConnectionOptions = {
@@ -10,7 +12,7 @@ export const pgConfig :ConnectionOptions = {
             password:process.env.DATABASE_PASSWORD!,
             database:'movielex',
             entities:[Movie],
-            synchronize:true
+            synchronize:true,
 
 }
 

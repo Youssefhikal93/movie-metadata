@@ -1,6 +1,6 @@
 import { getRepository } from "typeorm";
 import { MovieBody } from "~/interfaces/movieBody";
-import { BadRequestException, NotfoundException } from "~/middelwares/errorHandler";
+import { NotfoundException } from "~/middelwares/errorHandler";
 import { Movie } from "~/schemas/movieModel";
 
 class MovieService {
@@ -26,7 +26,7 @@ class MovieService {
     }
 
     public async fetch(requestedQuery:any):Promise<Movie[]>{
-        const {page=1,limit=10,genre,title,} = requestedQuery
+        const {page=1,limit=10,genre,title,sort} = requestedQuery
 
         const query = getRepository(Movie).createQueryBuilder('movie')
        
@@ -38,8 +38,15 @@ class MovieService {
             query.where(`movie.genres::jsonb @> :genre`, { genre: JSON.stringify([{ name  :genre.toLowerCase() }]) })
         }
 
+    const allowedSorts = ['title', 'release_date'];
+    if (sort && allowedSorts.includes(sort)) {
+      query.orderBy(`movie.${sort}`, 'ASC');
+    } else {
+      query.orderBy('movie.release_date', 'DESC');
+    }
+
     const movies= await query
-    .orderBy('movie.release_date',"DESC")
+    // .orderBy('movie.release_date',"DESC")
     .skip((+page-1)*+limit).take(+limit)
     .getMany()
 
