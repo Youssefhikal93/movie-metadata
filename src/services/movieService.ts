@@ -1,7 +1,7 @@
-import { MovieBody } from "~/interfaces/movieBody";
-import { NotfoundException } from "~/middelwares/errorHandler";
-import { Movie } from "~/schemas/movieModel";
-import APIFeatures from "~/utils/APIFeatuers";
+import { MovieBody } from "../interfaces/movieBody";
+import { NotfoundException } from "../middelwares/errorHandler";
+import { Movie } from "../schemas/movieModel";
+import APIFeatures from "../utils/APIFeatuers";
 
 class MovieService {
     public async edit(id:number,requestBody:MovieBody):Promise<Movie>{

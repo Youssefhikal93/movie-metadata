@@ -11,9 +11,9 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "baseUrl": ".",
-      "paths": {
-        "~/*": ["src/*"] 
-      }
+      // "paths": {
+      //   "~/*": ["src/*"] 
+      // }
     },
     "ts-node": {
       "require": ["tsconfig-paths/register"]

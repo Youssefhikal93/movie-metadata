@@ -6,7 +6,7 @@
   "scripts": {
     "seed": "ts-node src/utils/seedCsv.ts",
     "start:dev": "npx nodemon",
-     "test" : "jest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

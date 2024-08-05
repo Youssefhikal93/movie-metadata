@@ -1,5 +1,6 @@
 import { ObjectLiteral, QueryBuilder, SelectQueryBuilder } from 'typeorm';
-import { Movie } from '~/schemas/movieModel';
+import { BadRequestException } from '../middelwares/errorHandler';
+import { Movie } from '../schemas/movieModel';
 
 class APIFeatures <T extends ObjectLiteral>{
   constructor(
@@ -41,6 +42,9 @@ class APIFeatures <T extends ObjectLiteral>{
 
   paginate(): this {
     const { page = 1, limit = 10 } = this.queryString;
+    if (typeof +page !=="number" || null || undefined || isNaN(page)){
+        throw new BadRequestException(`Page:${page} must be a number`)
+    }
     const skip = (+page - 1) * +limit;
 
     this.query.skip(skip).take(+limit);

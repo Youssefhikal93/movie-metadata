@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import { BadRequestException, NotfoundException } from "~/middelwares/errorHandler"
-import { Movie } from "~/schemas/movieModel"
-import { movieService } from "~/services/movieService"
+import { BadRequestException, NotfoundException } from "../middelwares/errorHandler"
+import { Movie } from "../schemas/movieModel"
+import { movieService } from "../services/movieService"
 
 
 class MovieController {

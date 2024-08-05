@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { CustomError, NotfoundException } from './middelwares/errorHandler'
 import appRoutes from './routes/appRoutes'
 import seedDatabase from './utils/seedCsv'
+import sqlConfig from '.././ormconfig'
 
 
 class Server {
@@ -12,12 +13,13 @@ class Server {
     this.app = app
   }
 
-  public start():void {
+  public async start():Promise<void> {
+    // await sqlConfig.initialize();
     this.setupMiddleware()
     this.setupRoutes()
     this.setupGlobalError()
+    await this.seedDatabase();
     this.startServer()
-    this.seedDatabase();
   }
 
   private setupMiddleware(): void {
@@ -65,6 +67,10 @@ class Server {
     await seedDatabase();
   }
 
+// Teardown for testing purposes
+  async stopServer(): Promise<void> {
+    await sqlConfig.destroy(); 
+  }
 }
 
 export default Server

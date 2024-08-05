@@ -2,12 +2,12 @@ import { DataSource } from 'typeorm';
 import { Movie } from '../schemas/movieModel';
 import csv from 'csv-parser';
 import fs from 'fs';
-import sqlConfig from 'ormconfig';
+import sqlConfig from '../../ormconfig';
 
 const seedDatabase = async () => {
 
-  const dataSource:DataSource = new DataSource(sqlConfig);
-  await dataSource.initialize();
+  // const dataSource:DataSource = new DataSource(sqlConfig);
+  await sqlConfig.initialize();
   
   fs.createReadStream('movies.csv')
     .pipe(csv())
@@ -30,6 +30,8 @@ const seedDatabase = async () => {
     .on('end', async () => {
       console.log('CSV file successfully processed')
      });
+
+    //  await sqlConfig.destroy()
 };
 
 
