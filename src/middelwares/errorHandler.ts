@@ -5,7 +5,7 @@ export abstract class CustomError extends Error {
     constructor(message: string) {
       super(message)
     }
-    public getError() {
+     public getError() {
       return {
         status: this.status,
         statusCode: this.statusCode,
@@ -51,14 +51,3 @@ export abstract class CustomError extends Error {
       super(message)
     }
   }
-  
- 
-  
-  // export const catchAsync = (fn: any) => async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     await fn(req, res, next)
-  //   } catch (err: any) {
-  //     next(new InternalServelException(err.message))
-  //   }
-  // }
-  

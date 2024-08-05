@@ -1,32 +1,37 @@
-import { createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Movie } from '../schemas/movieModel';
 import csv from 'csv-parser';
 import fs from 'fs';
-import pgConfig from '~/ormconfig';
+import sqlConfig from 'ormconfig';
 
 const seedDatabase = async () => {
 
-  const connection:any = await createConnection(pgConfig);
-  const movieRepository = connection.getRepository(Movie);
-
+  const dataSource:DataSource = new DataSource(sqlConfig);
+  await dataSource.initialize();
+  
   fs.createReadStream('movies.csv')
     .pipe(csv())
     .on('data', async (row) => {
      
         row.vote_average = parseInt(row.vote_average)
         row.runtime = row.runtime ? +row.runtime : null
-        row.genres = row.genres ? JSON.parse(row.genres.replace(/'/g, '"')).map((genre: { id: number; name: string; }) => ({
-            id: genre.id,
-            name: genre.name.toLowerCase(),
-          })) : []
-          row.release_date ? new Date(row.release_date).toISOString() : null
+        row.genres = row.genres
+            ? JSON.stringify(JSON.parse(row.genres.replace(/'/g, '"')).map((genre: { id: number; name: string }) => ({
+                id: genre.id,
+                name: genre.name.toLowerCase(),
+              })))
+            : '[]'
 
-      const movie = movieRepository.create(row);
-      await movieRepository.save(movie);
+        row.release_date ? new Date(row.release_date).toISOString() : null
+
+      const movie = Movie.create(row);
+      await Movie.save(movie);
     })
-    .on('end', () => {
-      console.log('CSV file successfully processed');
-    });
+    .on('end', async () => {
+      console.log('CSV file successfully processed')
+     });
 };
 
-seedDatabase()
+
+
+export default seedDatabase

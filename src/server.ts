@@ -1,23 +1,23 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 import 'dotenv/config'
 import { CustomError, NotfoundException } from './middelwares/errorHandler'
-import { createConnection } from 'typeorm'
 import appRoutes from './routes/appRoutes'
-import pgConfig from './ormconfig'
+import seedDatabase from './utils/seedCsv'
 
 
 class Server {
   private app: Application
+
   constructor(app: Application) {
     this.app = app
   }
 
-  public start(): void {
+  public start():void {
     this.setupMiddleware()
     this.setupRoutes()
     this.setupGlobalError()
     this.startServer()
-    this.connectToDB()
+    this.seedDatabase();
   }
 
   private setupMiddleware(): void {
@@ -36,31 +36,35 @@ class Server {
       if (err instanceof CustomError) {
         res.status(err.statusCode).json(err.getError())
       }else {
-        res.status(500).json({
+        if(process.env.ENV === 'development'){
+
+          res.status(500).json({
             status :err.status , 
             error: err,
             message:err.message ,
             stack: err.stack,})
+          }else {
+            res.status(500).json({
+              status:'fail',
+              message:'Issue occurred, please try again later'
+            })
+          }
       }
       next()
     })
   }
 
   private startServer():void {
-    const port = process.env.PORT! || 8000
+    const port = process.env.PORT! || 80
 
     this.app.listen(port, () => {
       console.log(`App listening to ${port}`)
     })
   }
-  private connectToDB():void{
-    
-    const connection = async ()=> {
-     await createConnection(pgConfig)
-        console.log('connected to DB');
-    }
-    connection()
+  private async seedDatabase(): Promise<void> {
+    await seedDatabase();
   }
+
 }
 
 export default Server

@@ -4,12 +4,7 @@ export interface MovieBody {
      releaseDate :string
      runTime :number
       overview :string
-      genres :Genre[]
+      genres :string
      voteAverage:number
 
-}
-
-export interface Genre {
-    id:number 
-    name:string
 }

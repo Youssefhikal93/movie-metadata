@@ -1,5 +1,4 @@
 import {BaseEntity, Entity , Column,  PrimaryGeneratedColumn} from "typeorm"
-import { Genre } from "~/interfaces/movieBody";
 
 @Entity ('movie')
 export class Movie extends BaseEntity {
@@ -16,8 +15,8 @@ export class Movie extends BaseEntity {
     overview:string
 
     
-    @Column("jsonb",{default: [] , nullable:true})
-    genres:Genre[] 
+    @Column({ type: 'text', default: '[]', nullable: true })
+     genres: string;
 
      @Column({type:'date'})
      release_date:string

@@ -1,6 +1,4 @@
-import { Application }
-from 'express'
-
+import { Application } from 'express'
 import moviesRouter from './movieRoutes'
 
  const appRoutes =(app:Application)=>{
