@@ -1,10 +1,10 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 import 'dotenv/config'
-import { CustomError, NotfoundException } from './middelwares/errorHandler'
+import {CustomError, NotfoundException } from './middelwares/errorHandler'
 import appRoutes from './routes/appRoutes'
 import seedDatabase from './utils/seedCsv'
-import sqlConfig from '.././ormconfig'
-
+import swaggerConfig from './swaggerConfig'
+import { ValidationError } from 'class-validator'
 
 class Server {
   private app: Application
@@ -24,6 +24,8 @@ class Server {
 
   private setupMiddleware(): void {
     this.app.use(express.json())
+    swaggerConfig(this.app)
+   
   }
   private setupRoutes(): void {
     appRoutes(this.app)
@@ -35,23 +37,30 @@ class Server {
     })
     //global error
     this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+      if (Array.isArray(err) && err[0] instanceof ValidationError) {
+        const validationErrors = err.map((el: ValidationError) => Object.values(el.constraints!))
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Validation errors',
+          errors: validationErrors,
+        });
+      } 
+      
       if (err instanceof CustomError) {
         res.status(err.statusCode).json(err.getError())
-      }else {
-        if(process.env.ENV === 'development'){
-
+      } else if(process.env.NODE_ENV === 'development'){
+        res.status(500).json({
+          status :err.status , 
+          error: err,
+          message:err.message ,
+          stack: err.stack,})
+        }else {
           res.status(500).json({
-            status :err.status , 
-            error: err,
-            message:err.message ,
-            stack: err.stack,})
-          }else {
-            res.status(500).json({
-              status:'fail',
-              message:'Issue occurred, please try again later'
-            })
-          }
-      }
+            status:'fail',
+            message:'Issue occurred, please try again later'
+          })
+        }
+    
       next()
     })
   }
@@ -67,10 +76,6 @@ class Server {
     await seedDatabase();
   }
 
-// Teardown for testing purposes
-  async stopServer(): Promise<void> {
-    await sqlConfig.destroy(); 
-  }
 }
 
 export default Server

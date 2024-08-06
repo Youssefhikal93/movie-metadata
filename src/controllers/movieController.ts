@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express"
-import { BadRequestException, NotfoundException } from "../middelwares/errorHandler"
+import { BadRequestException } from "../middelwares/errorHandler"
 import { Movie } from "../schemas/movieModel"
 import { movieService } from "../services/movieService"
 
 
 class MovieController {
- public async getAll(req:Request,res:Response,next:NextFunction){
+ public async getAll(req:Request,res:Response){
     
     const moviesList = await movieService.fetch(req.query)
     
@@ -24,9 +24,12 @@ class MovieController {
 
     public async updateOne(req: any, res: Response, next: NextFunction) {
        const {id} = req.params
-        const parsedId = parseInt(id, 10);
-        if(isNaN(parsedId)|| null || undefined){
-            return next(new BadRequestException('Movie id must be a number'))
+        const parsedId = +id;
+        
+        if(isNaN(parsedId) || parsedId <= 0 || typeof parsedId !=="number"){
+             throw new BadRequestException('Movie id must be a positive number')
+             
+            // return res.status(400).json({ message: 'Movie id must be a positive number' })
         }
 
     const updatedMovie:Movie = (await movieService.edit(parsedId, req.body))

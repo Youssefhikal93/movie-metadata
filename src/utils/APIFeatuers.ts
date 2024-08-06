@@ -1,6 +1,5 @@
 import { ObjectLiteral, QueryBuilder, SelectQueryBuilder } from 'typeorm';
 import { BadRequestException } from '../middelwares/errorHandler';
-import { Movie } from '../schemas/movieModel';
 
 class APIFeatures <T extends ObjectLiteral>{
   constructor(

@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+
 import { Movie } from '../schemas/movieModel';
 import csv from 'csv-parser';
 import fs from 'fs';
@@ -6,7 +6,7 @@ import sqlConfig from '../../ormconfig';
 
 const seedDatabase = async () => {
 
-  // const dataSource:DataSource = new DataSource(sqlConfig);
+
   await sqlConfig.initialize();
   
   fs.createReadStream('movies.csv')

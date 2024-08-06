@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-      "module": "NodeNext", 
-      "moduleResolution": "NodeNext",
+      "module": "commonjs", 
+      // "moduleResolution": "NodeNext",
       "target": "ES2022", 
       "outDir": "dist", 
       "esModuleInterop": true,
@@ -11,9 +11,10 @@
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "baseUrl": ".",
-      // "paths": {
-      //   "~/*": ["src/*"] 
-      // }
+      "resolveJsonModule": true,
+      "paths": {
+        "~/*": ["src/*"] 
+      }
     },
     "ts-node": {
       "require": ["tsconfig-paths/register"]

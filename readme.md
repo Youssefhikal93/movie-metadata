@@ -17,10 +17,14 @@
     ```sh
     npm run start:dev
     ```
+ The data will be seeded automaticully 
 
 ## API Endpoints
 
 ### List Movies
+
+####Api docmentation 
+http://localhost:{PORT}/api-docs/
 
 - **URL**: `/api/movies`
 - **Method**: `GET`
@@ -42,14 +46,31 @@
 ### List Movies
 
 ```sh
-curl -X GET "http://localhost:3000/api/movies?page=1&limit=10&genre=Action&sort=title"
+curl -X GET "http://localhost:80/api/movies?page=1&limit=10&genre=Action&sort=title"
+
 
 
 ## Error handling 
 
 ### handled errors 
- `in case there's any unhandled error , the enviroment varibale has to be production or development in .env file ` 
+ `In case there's any unhandled error , the custom msg will appear based on the envirmonet varrbales( production | development) ` 
 
  1. In "production"  friendly msgs for the users 
  2. In "development" the errors is completly exposed for debugging 
 
+
+
+
+## Test 
+```sh
+    npm test 
+    ```
+Testing includes:
+
+Endpoint verification
+Error handling checks
+
+
+Notes
+Make sure your environment variables are correctly set for NODE_ENV to toggle between development and production modes.
+Data seeding will occur automatically when the server starts. Ensure the movies.csv file is present in the root directory for seeding.

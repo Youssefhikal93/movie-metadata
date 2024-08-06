@@ -17,25 +17,16 @@ export abstract class CustomError extends Error {
 
   
   export class BadRequestException extends CustomError {
-    status: string = 'error'
+    status: string = 'Fail'
     statusCode: number = 400
     constructor(message: string) {
       super(message)
     }
   }
-  
-  export class UnauthorizedException extends CustomError {
-    status: string = 'error'
-    statusCode: number = 401
-  
-    constructor(message: string) {
-      super(message)
-    }
-  }
-  
+
   
   export class NotfoundException extends CustomError {
-    status: string = 'error'
+    status: string = 'Fail'
     statusCode: number = 404
   
     constructor(message: string) {
@@ -50,4 +41,5 @@ export abstract class CustomError extends Error {
     constructor(message: string) {
       super(message)
     }
+    
   }

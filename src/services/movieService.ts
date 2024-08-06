@@ -4,23 +4,21 @@ import { Movie } from "../schemas/movieModel";
 import APIFeatures from "../utils/APIFeatuers";
 
 class MovieService {
-    public async edit(id:number,requestBody:MovieBody):Promise<Movie>{
+    public async edit(id:number,requestedBody:MovieBody):Promise<Movie>{
         
-    const {title,releaseDate,runTime,overview,genres,voteAverage}=requestBody
     const movie = await Movie.findOneBy({ id });
 
     if (!movie) {
         throw  new NotfoundException(`No movie found with the selected id:${id}`)
       }
+  movie.title = requestedBody.title || movie.title;
+  movie.release_date = requestedBody.releaseDate || movie.release_date;
+  movie.runtime = requestedBody.runTime || movie.runtime;
+  movie.overview = requestedBody.overview || movie.overview;
+  movie.genres = requestedBody.genres ? JSON.stringify(requestedBody.genres) : movie.genres;
+  movie.vote_average = requestedBody.voteAverage || movie.vote_average;
 
-      movie.title = title || movie.title;
-      movie.release_date = releaseDate || movie.release_date;
-      movie.runtime = runTime || movie.runtime;
-      movie.overview = overview || movie.overview;
-      movie.genres = genres ? JSON.stringify(genres) : movie.genres;
-      movie.vote_average = voteAverage || movie.vote_average;
-
-    const updatedMovie = await Movie.save(movie)
+    const updatedMovie = await movie.save()
     updatedMovie.genres = JSON.parse(updatedMovie.genres.replace(/\\/g, ''))
     return updatedMovie
     }
