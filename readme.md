@@ -4,7 +4,7 @@
 
 1. Clone the repository:
     ```sh
-    git clone <repository-url>
+    git clone <(https://github.com/Youssefhikal93/movie-metadata/tree/final-version)>
     cd movie-metadata-api
     ```
 
