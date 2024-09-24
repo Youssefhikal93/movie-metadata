@@ -4,9 +4,11 @@ import { CustomError, formatErrorMsg, NotfoundException } from './middelwares/er
 import appRoutes from './routes/appRoutes';
 import seedDatabase from './utils/seedCsv';
 import swaggerConfig from '../swaggerConfig';
+import { Server as HttpServer } from 'http'
 
 class Server {
   private app: Application;
+  private server: HttpServer
 
   constructor(app: Application) {
     this.app = app;
@@ -43,10 +45,10 @@ class Server {
     });
   }
 
-  private startServer(): void {
+  private startServer() {
     const port = process.env.PORT! || 3000;
 
-    this.app.listen(port, () => {
+    this.server = this.app.listen(port, () => {
       console.log(`App listening to ${port}`);
 
       process.on('unhandledRejection', (err: any) => {
@@ -54,10 +56,16 @@ class Server {
         process.exit(1);
       });
     });
+    // return this.server
   }
   private async seedDatabase(): Promise<void> {
     await seedDatabase();
   }
+
+  private async stopServer(): Promise<void> {
+    this.server.close()
+  }
+
 }
 
 export default Server;

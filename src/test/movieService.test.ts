@@ -43,13 +43,13 @@ describe('MovieService', () => {
       expect(mockMovie.save).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotfoundException if the movie does not exist', async () => {
+    it('should throw NotfoundException if the movie does not exist',  () => {
       const movieId = 999;
       const updatedData = { title: 'Non-Existent Movie' };
 
       (Movie.findOneBy as jest.Mock).mockResolvedValue(undefined);
 
-      await expect(movieService.edit(movieId, updatedData)).rejects.toThrow(NotfoundException);
+       expect(movieService.edit(movieId, updatedData)).rejects.toThrow(NotfoundException);
     });
   });
 
@@ -65,6 +65,7 @@ describe('MovieService', () => {
         andWhere: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
+        fields: jest.fn().mockReturnThis(),
         take: jest.fn().mockReturnThis(),
         getMany: jest.fn().mockResolvedValue(mockMovies),
       } as unknown as typeof APIFeatures);
@@ -72,6 +73,7 @@ describe('MovieService', () => {
       (APIFeatures as jest.Mock).mockImplementation(() => ({
         filter: jest.fn().mockReturnThis(),
         sort: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
         paginate: jest.fn().mockReturnThis(),
         getResults: jest.fn().mockResolvedValue(mockMovies),
       }));
@@ -81,5 +83,51 @@ describe('MovieService', () => {
       expect(result.length).toBe(2);
       expect(result[0].title).toBe('Movie 1');
     });
+
+
+
+    describe("add one",()=>{
+
+      it('should create a new movie',async ()=>{
+        const requestedBody = {
+          title: 'New Movie',
+          runtime: 150,
+          overview: 'A great movie about something.',
+          voteAverage: 8.5,
+          releaseDate:"1/1/2024",
+          genre:'[]'
+        };
+
+        const mockmovie = {
+          save:jest.fn().mockResolvedValue({
+            id:1,
+            title: 'New Movie',
+            runtime: 150,
+            overview: 'A great movie about something.',
+            voteAverage: 8.5,
+            releaseDate:"1/1/2024",
+            genre:'[]',
+          }),
+        } as any as Movie
+
+        (Movie.create as jest.Mock).mockReturnValue(mockmovie);
+
+        // Call the method
+        const result = await movieService.addone(requestedBody);
+        
+        expect(result.title).toBe('New Movie')
+        expect(mockmovie.save).toHaveBeenCalledTimes(1)
+        expect(Movie.create).toHaveBeenCalledWith({
+          title: 'New Movie',
+          runtime: 150,
+          overview: 'A great movie about something.',
+          genres: '[]',
+          release_date:"1/1/2024",
+          vote_average: 8.5,
+        });
+
+      })
+    })
+
   });
 });

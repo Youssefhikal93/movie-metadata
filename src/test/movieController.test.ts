@@ -78,5 +78,47 @@ describe('MovieController', () => {
         }
       }
     });
+    it('should create a movie with status 201',async ()=>{
+      const newmockMovie = {
+        id:1,
+        title :'New Movie',
+        runtime:150
+      }
+
+      req.body={
+        title : 'New Movie',
+        runtime:150
+      } as any
+
+      (movieService.addone as jest.Mock).mockResolvedValue(newmockMovie)
+
+      await movieController.createMovie(req as Request, res as Response,next)
+
+      expect(movieService.addone).toHaveBeenCalledWith(req.body);
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith({
+        status: 'success',
+        data: {
+          newMovie:newmockMovie
+        },
+    })
+     
   });
-});
+
+  it('should throw an error if the release date is not formatted', async ()=>{
+    req.body = {title:"New movie" , release_date:'invalid'}
+      
+    try {
+      await movieController.createMovie(req as Request, res as Response,next);
+    } catch (error) {
+      // We use the instanceOf check to ensure the correct error type
+      expect(error).toBeInstanceOf(BadRequestException);
+      expect((error as BadRequestException).message).toBe('Invalid date format. Please use dd/MM/yyyy.');
+    }
+  })
+})
+
+
+
+
+})

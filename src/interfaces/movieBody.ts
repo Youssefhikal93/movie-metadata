@@ -18,4 +18,5 @@ export interface RequestedQuery {
   sort?: string;
   page?: number;
   limit?: number;
+  fields?:string;
 }

@@ -54,8 +54,38 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Movie'
+ *   post:
+ *     summary: Create a new movie
+ *     tags: [Movies]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Movie'
+ *     responses:
+ *       '201':
+ *         description: Movie created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
+ *       '400':
+ *         description: Bad Request (e.g., validation error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
  */
-router.route('/').get(movieController.getAll);
+router.route('/').get(movieController.getAll)
+    .post(movieController.createMovie);
 
 /**
  * @swagger

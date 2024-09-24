@@ -11,11 +11,12 @@ describe('APIFeatures', () => {
     queryBuilder = {
       alias: 'movie',
       andWhere: jest.fn().mockReturnThis(),
+      // andWhere: jest.fn(()=>this),
       orderBy: jest.fn().mockReturnThis(),
       skip: jest.fn().mockReturnThis(),
       take: jest.fn().mockReturnThis(),
       getMany: jest.fn().mockResolvedValue([]),
-    } as unknown as SelectQueryBuilder<any>;
+    } as any as SelectQueryBuilder<any>;
   });
 
   it('should filter by genre and title', () => {
@@ -48,6 +49,9 @@ describe('APIFeatures', () => {
     apiFeatures.sort();
 
     expect(queryBuilder.orderBy).toHaveBeenCalledWith('movie.release_date', 'DESC');
+    expect(queryBuilder.orderBy).toHaveBeenCalledTimes(1);
+    // expect(()=>apiFeatures.sort()).toHaveBeenCalled();
+
   });
 
   it('should paginate results', () => {
@@ -63,7 +67,6 @@ describe('APIFeatures', () => {
   it('should throw BadRequestException for invalid page number', () => {
     const queryString: RequestedQuery = { page: 'invalid' } as unknown as RequestedQuery;
     apiFeatures = new APIFeatures(queryBuilder, queryString);
-
     expect(() => apiFeatures.paginate()).toThrow(BadRequestException);
   });
 

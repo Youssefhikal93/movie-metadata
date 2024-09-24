@@ -3,6 +3,7 @@ import { validateOrReject, IsString, IsOptional, IsNumber, Min, Max, IsDefined }
 import { Genre } from '../interfaces/movieBody';
 import { BadRequestException } from '../middelwares/errorHandler';
 import { parse, isValid, format } from 'date-fns';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Movie extends BaseEntity {
@@ -21,9 +22,9 @@ export class Movie extends BaseEntity {
 
   @Column({ type: 'text', default: '[]', nullable: true })
   @IsOptional()
-  genres: string = '[]';
+  genres: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   release_date: string;
 
   @Column({ nullable: true })
@@ -82,6 +83,15 @@ export class Movie extends BaseEntity {
         if (!isValid(parsedDate)) {
           throw new BadRequestException('release_date must be a valid date in the format dd/MM/yyyy');
         }
+
+        const minDate = new Date(1800, 0, 1);
+        const maxDate = new Date();
+
+        if (parsedDate < minDate || parsedDate > maxDate) {
+          throw new BadRequestException('release_date must be a realistic date');
+        }
+
+
         this.release_date = format(parsedDate, 'yyyy-MM-dd');
       }
     }

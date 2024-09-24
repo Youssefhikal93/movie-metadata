@@ -1,3 +1,4 @@
+import { Application } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
@@ -68,6 +69,6 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-export default (app:any) => {
+export default (app:Application) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 };

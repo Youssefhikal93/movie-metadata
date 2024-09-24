@@ -40,6 +40,50 @@ class APIFeatures<T extends ObjectLiteral> {
     return this;
   }
 
+  limit():this{
+    const { fields } = this.queryString;
+
+    if(fields){
+      const arrayFields = fields.split(",").map(el=>el.trim())
+     
+      const allowedFields = arrayFields.filter(el=>{
+
+        const validFields =['title', 'runtime', 'release_date', 'genres', 'overview','vote_rating'] 
+
+        return validFields.includes(el)
+
+      })
+
+      if(allowedFields.length === 0){
+        throw new BadRequestException('invalid field inputs')
+      }
+
+     this.query = this.query.select(allowedFields.map(el=>`${this.query.alias}.${el}`))
+
+  
+  //   if (fields) {
+  //     const fieldArray = fields.split(',').map(field => field.trim());
+
+  //     const validFields = fieldArray.filter(field => {
+          
+  //         const allowedFields = ['title', 'runtime', 'release_date', 'genres', 'overview','vote_rating']; // Example of allowed fields
+  //         return allowedFields.includes(field);
+  //     });
+
+  //     if (validFields.length === 0) {
+  //         throw new BadRequestException('No valid fields specified.');
+  //     }
+
+  //     // Construct the select query only with valid fields
+  //     this.query = this.query.select(
+  //         validFields.map(field => `${this.query.alias}.${field}`)
+  //     );
+  // } 
+    }
+
+  return this;
+  }
+
   paginate(): this {
     const { page = 1, limit = 10 } = this.queryString;
 
@@ -51,7 +95,7 @@ class APIFeatures<T extends ObjectLiteral> {
     }
     const skip = (+page - 1) * +limit;
 
-    this.query.skip(skip).take(+limit);
+    this.query.skip(skip).take(limit);
 
     return this;
   }
