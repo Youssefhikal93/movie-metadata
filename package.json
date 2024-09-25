@@ -4,7 +4,7 @@
   "description": "A simple Movie metada API",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc",
     "start": "node dist/src/index.js",
     "start:dev": "set NODE_ENV=development&& npx nodemon",
     "start:prod": "set NODE_ENV=production&& npx nodemon",
